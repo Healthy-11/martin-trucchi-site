@@ -1,0 +1,75 @@
+---
+interface Props {
+    title: string;
+    description: string;
+    type?: string;
+    image?: string;
+    article?: boolean;
+    citation?: {
+        title: string;
+        authors: string[];
+        date: string;
+        journal?: string;
+        pdfUrl?: string;
+        doi?: string;
+    };
+}
+
+const {
+    title,
+    description,
+    type = 'website',
+    image = '/favicon.svg',
+    article = false,
+    citation,
+} = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const imageUrl = new URL(image, Astro.site);
+---
+
+<!-- Primary Meta -->
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl.href} />
+
+<!-- Open Graph -->
+<meta property="og:type" content={article ? 'article' : type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl.href} />
+<meta property="og:image" content={imageUrl.href} />
+<meta property="og:site_name" content="Martin Trucchi" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl.href} />
+
+<!-- Schema.org Person (on homepage/about) -->
+{!article && !citation && (
+    <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Martin Trucchi",
+        "jobTitle": "Computer science student",
+        "affiliation": "École Normale Supérieure de Lyon",
+        "url": Astro.site?.href,
+        "sameAs": [],
+    })} />
+)}
+
+<!-- Google Scholar / Highwire Press citation tags -->
+{citation && (
+    <>
+        <meta name="citation_title" content={citation.title} />
+        {citation.authors.map((author) => (
+            <meta name="citation_author" content={author} />
+        ))}
+        <meta name="citation_publication_date" content={citation.date} />
+        {citation.journal && <meta name="citation_journal_title" content={citation.journal} />}
+        {citation.pdfUrl && <meta name="citation_pdf_url" content={citation.pdfUrl} />}
+        {citation.doi && <meta name="citation_doi" content={citation.doi} />}
+    </>
+)}

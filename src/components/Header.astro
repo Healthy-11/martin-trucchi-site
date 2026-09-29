@@ -1,0 +1,95 @@
+---
+const pathname = Astro.url.pathname;
+
+const navItems = [
+    { href: '/', label: 'Home' },
+    { href: '/about/', label: 'About' },
+    { href: '/publications/', label: 'Publications' },
+    { href: '/teaching/', label: 'Teaching' },
+    { href: '/talks/', label: 'Talks' },
+    { href: '/code/', label: 'Code' },
+    { href: '/blog/', label: 'Blog' },
+    { href: '/cv/', label: 'CV' },
+    { href: '/links/', label: 'Links' },
+];
+
+function isActive(href: string): boolean {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href);
+}
+---
+
+<header class="site-header">
+    <div class="container header-inner">
+        <a href="/" class="logo">Martin Trucchi</a>
+
+        <nav id="main-nav" aria-label="Main navigation">
+            <ul>
+                {navItems.map(({ href, label }) => (
+                    <li>
+                        <a href={href} class:list={[{ active: isActive(href) }]}>
+                            {label}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </nav>
+
+        <div class="header-actions">
+            <button
+                class="search-btn"
+                id="search-open"
+                aria-label="Search (Ctrl+K)"
+                title="Search (Ctrl+K)"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+            </button>
+
+            <button class="theme-toggle" aria-label="Toggle dark/light theme"></button>
+
+            <button
+                class="mobile-nav-toggle"
+                id="mobile-nav-toggle"
+                aria-label="Toggle navigation"
+                aria-expanded="false"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+<script>
+    function initMobileNav() {
+        const toggle = document.getElementById('mobile-nav-toggle');
+        const nav = document.getElementById('main-nav');
+        if (!toggle || !nav) return;
+
+        const hamburger = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>`;
+        const closeIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+
+        toggle.addEventListener('click', () => {
+            const isOpen = nav.classList.toggle('open');
+            toggle.innerHTML = isOpen ? closeIcon : hamburger;
+            toggle.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        nav.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('open');
+                toggle.innerHTML = hamburger;
+                toggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+
+    initMobileNav();
+    document.addEventListener('astro:page-load', initMobileNav);
+</script>

@@ -1,0 +1,87 @@
+---
+// Pagefind search modal — activated by Ctrl+K or search button
+---
+
+<div class="search-overlay" id="search-overlay" aria-hidden="true">
+    <div class="search-modal" role="dialog" aria-label="Search">
+        <div id="pagefind-search"></div>
+    </div>
+</div>
+
+<script>
+    function initSearch() {
+        const overlay = document.getElementById('search-overlay');
+        const openBtn = document.getElementById('search-open');
+        if (!overlay) return;
+
+        function openSearch() {
+            overlay.classList.add('open');
+            overlay.setAttribute('aria-hidden', 'false');
+            const input = overlay.querySelector('input');
+            if (input) (input as HTMLElement).focus();
+        }
+
+        function closeSearch() {
+            overlay.classList.remove('open');
+            overlay.setAttribute('aria-hidden', 'true');
+        }
+
+        // Open via button
+        openBtn?.addEventListener('click', openSearch);
+
+        // Open via Ctrl+K / Cmd+K
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                if (overlay.classList.contains('open')) {
+                    closeSearch();
+                } else {
+                    openSearch();
+                }
+            }
+            if (e.key === 'Escape') {
+                closeSearch();
+            }
+        });
+
+        // Close on overlay click
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeSearch();
+        });
+    }
+
+    initSearch();
+    document.addEventListener('astro:page-load', initSearch);
+</script>
+
+<script is:inline>
+    // Load Pagefind UI after build (only available in production)
+    function loadPagefind() {
+        var container = document.getElementById('pagefind-search');
+        if (!container || container.dataset.loaded) return;
+
+        var script = document.createElement('script');
+        script.src = '/pagefind/pagefind-ui.js';
+        script.onload = function() {
+            new window.PagefindUI({
+                element: '#pagefind-search',
+                showSubResults: true,
+                showImages: false,
+            });
+            container.dataset.loaded = 'true';
+        };
+        script.onerror = function() {
+            container.innerHTML = '<p style="padding: 1rem; color: var(--text-tertiary);">Search is available in production builds.</p>';
+        };
+        document.head.appendChild(script);
+
+        // Also load the CSS
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/pagefind/pagefind-ui.css';
+        document.head.appendChild(link);
+    }
+
+    loadPagefind();
+    document.addEventListener('astro:page-load', loadPagefind);
+</script>

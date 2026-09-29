@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import about from '../data/about.json';
+import { richText } from '../utils/richtext';
+
+// bio is a markdown field in the CMS: links / bold / italic are rendered
+const bioHtml = richText(about.bio);
+---
+
+<BaseLayout
+    title="About | Martin Trucchi"
+    description={`About ${about.name}: background, research interests, and contact information.`}
+>
+    <div class="page-header">
+        <div class="container">
+            <h1>About</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="about-header reveal-up">
+            <div class="about-photo">
+                {about.photo
+                    ? <img src={about.photo} alt={about.name} />
+                    : 'Photo'
+                }
+            </div>
+            <div class="about-info">
+                <h2>{about.name}</h2>
+                <p class="role">{about.role}</p>
+                <div class="about-bio" set:html={bioHtml} />
+            </div>
+        </div>
+
+        <section>
+            <h2 class="section-heading">Research Interests</h2>
+            <ul class="reveal-up" data-stagger="0.05">
+                {about.interests.map((interest) => (
+                    <li>{interest}</li>
+                ))}
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="section-heading">Education</h2>
+            <ul class="reveal-up" data-stagger="0.05">
+                {about.education.map((edu) => (
+                    <li><strong>{edu.degree}</strong>, {edu.institution}{edu.year ? `, ${edu.year}` : ''}</li>
+                ))}
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="section-heading">Contact</h2>
+            <ul class="contact-list reveal-up" data-stagger="0.08">
+                {about.contact.map((item) => (
+                    <li><span class="label">{item.label}</span> <span>{item.value}</span></li>
+                ))}
+            </ul>
+        </section>
+    </div>
+</BaseLayout>

@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "name": "Martin Trucchi",
+    "subtitle": "Computer science PhD student, École Polytechnique",
+    "tagline": "Logic, type theory, constructive and synthetic mathematics."
+  },
+  "seo": {
+    "title": "Martin Trucchi",
+    "description": ""
+  },
+  "intro": "Welcome. You'll find my publications, teaching, talks, notes here.\n\nLast updated : 29/09/26",
+  "news": {
+    "show": true,
+    "heading": "Latest News",
+    "count": 5
+  },
+  "demos": [],
+  "quickLinks": [
+    {
+      "show": true,
+      "title": "Publications",
+      "href": "/publications/",
+      "description": "Research papers and preprints"
+    },
+    {
+      "show": true,
+      "title": "Teaching",
+      "href": "/teaching/",
+      "description": "Courses and lecture notes"
+    },
+    {
+      "show": true,
+      "title": "Talks",
+      "href": "/talks/",
+      "description": "Slides and recordings"
+    },
+    {
+      "show": true,
+      "title": "Blog",
+      "href": "/blog/",
+      "description": "Notes and expository writing"
+    },
+    {
+      "show": true,
+      "title": "CV",
+      "href": "/cv/",
+      "description": "Full curriculum vitae"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
+import SearchModal from '../components/SearchModal.astro';
+import SEOHead from '../components/SEOHead.astro';
+
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import 'katex/dist/katex.min.css';
+import '../styles/global.css';
+
+interface Props {
+    title: string;
+    description: string;
+    article?: boolean;
+    citation?: {
+        title: string;
+        authors: string[];
+        date: string;
+        journal?: string;
+        pdfUrl?: string;
+        doi?: string;
+    };
+}
+
+const { title, description, article = false, citation } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title="Martin Trucchi | Blog" href="/rss.xml" />
+
+    <SEOHead
+        title={title}
+        description={description}
+        article={article}
+        citation={citation}
+    />
+
+    <!-- Prevent FOUC: set theme before render -->
+    <script is:inline>
+        (function() {
+            var t = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+
+    <ViewTransitions />
+</head>
+<body>
+    <a href="#main-content" class="skip-to-content">Skip to content</a>
+    <ScrollProgress />
+    <Header />
+
+    <main id="main-content">
+        <slot />
+    </main>
+
+    <Footer />
+    <SearchModal />
+
+    <script src="../scripts/smooth-scroll.ts"></script>
+    <script src="../scripts/animations.ts"></script>
+    <script src="../scripts/theme.ts"></script>
+</body>
+</html>

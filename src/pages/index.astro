@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import QuickLinkCard from '../components/QuickLinkCard.astro';
+import DemoRenderer from '../components/DemoRenderer.astro';
+import { getCollection } from 'astro:content';
+import pubData from '../data/publications.json';
+import talkData from '../data/talks.json';
+import home from '../data/home.json';
+import { richText, inlineMarkdown } from '../utils/richtext';
+
+// ── Everything on this page is driven by src/data/home.json, editable
+// ── from /admin under "Site Content" > "Home Page".
+
+const newsCount = home.news?.count ?? 5;
+
+// Get latest blog posts for news section
+const latestPosts = (await getCollection('blog'))
+    .filter((p) => !p.data.draft)
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+    .slice(0, newsCount);
+
+// Build news items from recent content
+type NewsItem = { date: Date; text: string; link?: string };
+const news: NewsItem[] = [];
+
+latestPosts.forEach((post) => {
+    news.push({
+        date: post.data.date,
+        text: `New blog post: "${post.data.title}"`,
+        link: `/blog/${post.slug}/`,
+    });
+});
+
+pubData.publications.forEach((pub) => {
+    news.push({
+        date: new Date(`${pub.year}-01-15`),
+        text: `New paper: "${pub.title}"`,
+        link: '/publications/',
+    });
+});
+
+talkData.talks.forEach((talk) => {
+    const dateStr = talk.date.replace(/(\w+)\s+(\d{4})/, '$1 1, $2');
+    news.push({
+        date: new Date(dateStr),
+        text: `Talk: "${talk.title}" at ${talk.venue}`,
+        link: '/talks/',
+    });
+});
+
+// Sort by date descending and take the configured number
+news.sort((a, b) => b.date.valueOf() - a.date.valueOf());
+const latestNews = home.news?.show === false ? [] : news.slice(0, newsCount);
+
+// Only the demos ticked in the CMS, in the order they appear there
+const visibleDemos = (home.demos ?? []).filter((demo) => demo.show !== false);
+
+// Quick links, three per row, as before
+const visibleLinks = (home.quickLinks ?? []).filter((link) => link.show !== false);
+const linkRows: typeof visibleLinks[] = [];
+for (let i = 0; i < visibleLinks.length; i += 3) {
+    linkRows.push(visibleLinks.slice(i, i + 3));
+}
+
+const introHtml = richText(home.intro ?? '');
+---
+
+<BaseLayout
+    title={home.seo?.title || home.hero.name}
+    description={home.seo?.description || home.hero.tagline}
+>
+    <Hero
+        name={home.hero.name}
+        subtitle={home.hero.subtitle}
+        tagline={home.hero.tagline}
+    />
+
+    <section class="intro">
+        <div class="container">
+            {introHtml && <div class="reveal-up" set:html={introHtml} />}
+
+            {latestNews.length > 0 && (
+                <section class="reveal-up" style="margin-top: 2.5rem;">
+                    <h2 class="section-heading">{home.news?.heading || 'Latest News'}</h2>
+                    <ul class="news-list">
+                        {latestNews.map((item) => (
+                            <li class="news-item">
+                                <span class="news-date">
+                                    {item.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                                </span>
+                                <span class="news-text">
+                                    {item.link
+                                        ? <a href={item.link}>{item.text}</a>
+                                        : item.text
+                                    }
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
+
+            {visibleDemos.map((demo) => (
+                <section class="reveal-up" style="margin-top: 2.5rem;">
+                    {demo.heading && <h2 class="section-heading">{demo.heading}</h2>}
+                    {demo.description && (
+                        <p style="margin-bottom: 1rem;" set:html={inlineMarkdown(demo.description)} />
+                    )}
+                    <DemoRenderer id={demo.id} />
+                </section>
+            ))}
+
+            {linkRows.map((row, index) => (
+                <div
+                    class="quick-links reveal-scale"
+                    data-stagger="0.1"
+                    style={`margin-top: ${index === 0 ? '2rem' : '1rem'};`}
+                >
+                    {row.map((link) => (
+                        <QuickLinkCard
+                            href={link.href}
+                            title={link.title}
+                            description={link.description}
+                        />
+                    ))}
+                </div>
+            ))}
+        </div>
+    </section>
+</BaseLayout>

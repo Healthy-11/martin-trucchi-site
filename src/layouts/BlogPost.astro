@@ -1,0 +1,190 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+interface Props {
+    title: string;
+    description: string;
+    date: Date;
+    tags?: string[];
+    readingTime?: string;
+    lastUpdated?: Date;
+    slug: string;
+}
+
+const { title, description, date, tags = [], readingTime, lastUpdated, slug } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+});
+
+const formattedUpdated = lastUpdated?.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+});
+
+// Get prev/next posts
+const allPosts = (await getCollection('blog'))
+    .filter((p) => !p.data.draft)
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const currentIndex = allPosts.findIndex((p) => p.slug === slug);
+const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+---
+
+<BaseLayout title={`${title} | Martin Trucchi`} description={description} article={true}>
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <div class="page-header">
+        <div class="container">
+            <h1>{title}</h1>
+            <div class="blog-meta">
+                <time datetime={date.toISOString()}>{formattedDate}</time>
+                {readingTime && <span>{readingTime}</span>}
+            </div>
+            {lastUpdated && (
+                <p class="last-updated">Last updated: {formattedUpdated}</p>
+            )}
+            {tags.length > 0 && (
+                <div style="margin-top: 0.5rem; display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                    {tags.map((tag) => (
+                        <a href={`/blog/tag/${tag}/`} class="blog-tag">{tag}</a>
+                    ))}
+                </div>
+            )}
+        </div>
+    </div>
+
+    <div class="container">
+        <nav class="toc" id="toc" aria-label="Table of Contents">
+            <h2>Table of Contents</h2>
+            <ol id="toc-list"></ol>
+        </nav>
+
+        <article class="prose" id="article-content">
+            <slot />
+        </article>
+
+        <!-- Prev/Next Navigation -->
+        {(prevPost || nextPost) && (
+            <nav class="post-nav" aria-label="Post navigation">
+                {prevPost ? (
+                    <a href={`/blog/${prevPost.slug}/`} class="post-nav-link prev">
+                        <span class="post-nav-label">&larr; Previous</span>
+                        <span class="post-nav-title">{prevPost.data.title}</span>
+                    </a>
+                ) : <div />}
+                {nextPost ? (
+                    <a href={`/blog/${nextPost.slug}/`} class="post-nav-link next">
+                        <span class="post-nav-label">Next &rarr;</span>
+                        <span class="post-nav-title">{nextPost.data.title}</span>
+                    </a>
+                ) : <div />}
+            </nav>
+        )}
+
+        <!-- Giscus Comments -->
+        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+            <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Comments</h2>
+            <p style="font-size: 0.9rem; color: var(--text-tertiary); font-style: italic;">
+                Comments powered by <a href="https://giscus.app" target="_blank" rel="noopener noreferrer">Giscus</a>.
+                Configure your GitHub repository to enable discussions.
+            </p>
+            <!-- Uncomment when GitHub repo is set up:
+            <script
+                src="https://giscus.app/client.js"
+                data-repo="OWNER/REPO"
+                data-repo-id="REPO_ID"
+                data-category="Announcements"
+                data-category-id="CATEGORY_ID"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="1"
+                data-emit-metadata="0"
+                data-input-position="top"
+                data-theme="preferred_color_scheme"
+                data-lang="en"
+                crossorigin="anonymous"
+                async
+            ></script>
+            -->
+        </div>
+    </div>
+</BaseLayout>
+
+<script>
+    function initBlogFeatures() {
+        // --- Reading Progress Bar ---
+        const progressBar = document.getElementById('reading-progress');
+        const article = document.getElementById('article-content');
+        if (progressBar && article) {
+            const updateProgress = () => {
+                const rect = article.getBoundingClientRect();
+                const articleTop = rect.top + window.scrollY;
+                const articleHeight = rect.height;
+                const scrolled = window.scrollY - articleTop;
+                const progress = Math.min(Math.max(scrolled / articleHeight, 0), 1) * 100;
+                progressBar.style.width = progress + '%';
+            };
+            window.addEventListener('scroll', updateProgress, { passive: true });
+            updateProgress();
+        }
+
+        // --- Table of Contents ---
+        const toc = document.getElementById('toc');
+        const tocList = document.getElementById('toc-list');
+        if (article && tocList) {
+            const headings = article.querySelectorAll('h2, h3');
+            if (headings.length < 2) {
+                toc?.remove();
+            } else {
+                tocList.innerHTML = '';
+                headings.forEach((heading, i) => {
+                    const id = heading.id || `heading-${i}`;
+                    heading.id = id;
+                    const li = document.createElement('li');
+                    if (heading.tagName === 'H3') {
+                        li.style.marginLeft = '1rem';
+                    }
+                    const a = document.createElement('a');
+                    a.href = `#${id}`;
+                    a.textContent = heading.textContent || '';
+                    li.appendChild(a);
+                    tocList.appendChild(li);
+                });
+            }
+        }
+
+        // --- Code Block Copy Buttons ---
+        document.querySelectorAll('.prose pre').forEach((pre) => {
+            if (pre.parentElement?.classList.contains('code-block-wrapper')) return;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'code-block-wrapper';
+            pre.parentNode?.insertBefore(wrapper, pre);
+            wrapper.appendChild(pre);
+
+            const btn = document.createElement('button');
+            btn.className = 'code-copy-btn';
+            btn.textContent = 'Copy';
+            btn.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                navigator.clipboard.writeText(code?.textContent || '');
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+            wrapper.appendChild(btn);
+        });
+    }
+
+    initBlogFeatures();
+    document.addEventListener('astro:page-load', initBlogFeatures);
+</script>

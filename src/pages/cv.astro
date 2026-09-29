@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import cv from '../data/cv.json';
+import pubData from '../data/publications.json';
+import talkData from '../data/talks.json';
+import teaching from '../data/teaching.json';
+---
+
+<BaseLayout
+    title="CV | Martin Trucchi"
+    description="Curriculum vitae of Martin Trucchi: research internships, education, schools, and tools."
+>
+    <div class="page-header">
+        <div class="container">
+            <h1>Curriculum Vitae</h1>
+            {cv.pdf_url && (
+                <a href={cv.pdf_url} class="cv-download" target="_blank" rel="noopener noreferrer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download PDF
+                </a>
+            )}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="cv-section reveal-up">
+            <h2 class="section-heading">Research Internships</h2>
+            {cv.positions.map((pos) => (
+                <div class="cv-entry">
+                    <div class="cv-entry-header">
+                        <span class="cv-entry-title">{pos.title}</span>
+                        <span class="cv-entry-date">{pos.dates}</span>
+                    </div>
+                    <div class="cv-entry-detail">{pos.institution}</div>
+                    {pos.description && <p style="font-size: 0.875rem; color: var(--text-tertiary); margin-top: 0.25rem;">{pos.description}</p>}
+                </div>
+            ))}
+        </div>
+
+        <div class="cv-section reveal-up">
+            <h2 class="section-heading">Education</h2>
+            {cv.education.map((edu) => (
+                <div class="cv-entry">
+                    <div class="cv-entry-header">
+                        <span class="cv-entry-title">{edu.degree}</span>
+                        <span class="cv-entry-date">{edu.dates}</span>
+                    </div>
+                    <div class="cv-entry-detail">{edu.institution}</div>
+                    {edu.thesis && <p style="font-size: 0.875rem; color: var(--text-tertiary); margin-top: 0.25rem;">Thesis: <em>{edu.thesis}</em></p>}
+                </div>
+            ))}
+        </div>
+
+        {cv.schools && cv.schools.length > 0 && (
+            <div class="cv-section reveal-up">
+                <h2 class="section-heading">Schools</h2>
+                {cv.schools.map((school) => (
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <span class="cv-entry-title">{school.name}</span>
+                            <span class="cv-entry-date">{school.year}</span>
+                        </div>
+                        <div class="cv-entry-detail">{school.location}</div>
+                        {school.topic && <p style="font-size: 0.875rem; color: var(--text-tertiary); margin-top: 0.25rem;">{school.topic}</p>}
+                    </div>
+                ))}
+            </div>
+        )}
+
+        {pubData.publications.length > 0 && (
+            <div class="cv-section reveal-up">
+                <h2 class="section-heading">Publications</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">
+                    {pubData.publications.length} publication{pubData.publications.length !== 1 ? 's' : ''}.
+                    <a href="/publications/">View full list with abstracts &rarr;</a>
+                </p>
+                {pubData.publications.map((pub) => (
+                    <div class="cv-entry">
+                        <span class="cv-entry-title">{pub.title}</span>
+                        <div class="cv-entry-detail">{pub.authors} &middot; {pub.venue}</div>
+                    </div>
+                ))}
+            </div>
+        )}
+
+        {talkData.talks.length > 0 && (
+            <div class="cv-section reveal-up">
+                <h2 class="section-heading">Talks</h2>
+                {talkData.talks.map((talk) => (
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <span class="cv-entry-title">{talk.title}</span>
+                            <span class="cv-entry-date">{talk.date}</span>
+                        </div>
+                        <div class="cv-entry-detail">{talk.venue}</div>
+                    </div>
+                ))}
+            </div>
+        )}
+
+        {([...teaching.current, ...teaching.past]).length > 0 && (
+            <div class="cv-section reveal-up">
+                <h2 class="section-heading">Teaching</h2>
+                {[...teaching.current, ...teaching.past].map((course) => (
+                    <div class="cv-entry">
+                        <span class="cv-entry-title">{course.title}</span>
+                        <div class="cv-entry-detail">{course.meta}</div>
+                    </div>
+                ))}
+            </div>
+        )}
+
+        {cv.awards.length > 0 && cv.awards[0].name !== '' && (
+            <div class="cv-section reveal-up">
+                <h2 class="section-heading">Awards & Grants</h2>
+                {cv.awards.map((award) => (
+                    <div class="cv-entry">
+                        <div class="cv-entry-header">
+                            <span class="cv-entry-title">{award.name}</span>
+                            <span class="cv-entry-date">{award.year}</span>
+                        </div>
+                        <div class="cv-entry-detail">{award.institution}</div>
+                    </div>
+                ))}
+            </div>
+        )}
+
+        {cv.service.length > 0 && (
+            <div class="cv-section reveal-up">
+                <h2 class="section-heading">Service</h2>
+                <ul>
+                    {cv.service.map((s) => (
+                        <li><strong>{s.role}</strong>, {s.detail}</li>
+                    ))}
+                </ul>
+            </div>
+        )}
+
+        {cv.skills.length > 0 && (
+            <div class="cv-section reveal-up">
+                <h2 class="section-heading">Tools</h2>
+                <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                    {cv.skills.map((skill) => (
+                        <span class="project-tag">{skill}</span>
+                    ))}
+                </div>
+            </div>
+        )}
+
+        {cv.languages && cv.languages.length > 0 && (
+            <div class="cv-section reveal-up">
+                <h2 class="section-heading">Languages</h2>
+                <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                    {cv.languages.map((lang) => (
+                        <span class="project-tag">{lang}</span>
+                    ))}
+                </div>
+            </div>
+        )}
+    </div>
+</BaseLayout>

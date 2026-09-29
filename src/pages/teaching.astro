@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TeachingEntry from '../components/TeachingEntry.astro';
+import teaching from '../data/teaching.json';
+---
+
+<BaseLayout
+    title="Teaching | Martin Trucchi"
+    description="Teaching activities and courses by Martin Trucchi."
+>
+    <div class="page-header">
+        <div class="container">
+            <h1>Teaching</h1>
+            <p>Courses, seminars, and lecture notes.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        {teaching.current.length > 0 && (
+            <section>
+                <h2 class="section-heading">Current Courses</h2>
+                {teaching.current.map((course) => (
+                    <TeachingEntry
+                        title={course.title}
+                        meta={course.meta}
+                        description={course.description}
+                    />
+                ))}
+            </section>
+        )}
+
+        {teaching.past.length > 0 && (
+            <section>
+                <h2 class="section-heading">Past Courses</h2>
+                {teaching.past.map((course) => (
+                    <TeachingEntry
+                        title={course.title}
+                        meta={course.meta}
+                        description={course.description}
+                    />
+                ))}
+            </section>
+        )}
+
+        {teaching.notes.length > 0 && (
+            <section>
+                <h2 class="section-heading">Lecture Notes</h2>
+                <ul class="reveal-up" data-stagger="0.08">
+                    {teaching.notes.map((note) => (
+                        <li><a href={note.url}>{note.title}</a>: {note.description}</li>
+                    ))}
+                </ul>
+            </section>
+        )}
+
+        {teaching.current.length === 0 && teaching.past.length === 0 && teaching.notes.length === 0 && (
+            <p style="color: var(--text-tertiary); font-style: italic;">No teaching listed yet.</p>
+        )}
+    </div>
+</BaseLayout>

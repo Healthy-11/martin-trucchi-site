@@ -1,0 +1,285 @@
+backend:
+  name: github
+  repo: Healthy-11/martin-trucchi-site
+  branch: main
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
+  squash_merges: true
+
+publish_mode: editorial_workflow
+
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  # ── Blog Posts ──────────────────────────────────────
+  - name: blog
+    label: "Blog Posts"
+    label_singular: "Blog Post"
+    folder: src/content/blog
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: md
+    fields:
+      - { label: "Title", name: title, widget: string }
+      - { label: "Description", name: description, widget: text }
+      - { label: "Date", name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "Tags", name: tags, widget: list, default: [] }
+      - { label: "Draft", name: draft, widget: boolean, default: false }
+      - { label: "Last Updated", name: lastUpdated, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, required: false }
+      - { label: "Content", name: body, widget: markdown }
+
+  # ── Site Data (JSON files) ─────────────────────────
+  - name: data
+    label: "Site Content"
+    files:
+
+      # ── Home Page ──
+      - label: "Home Page"
+        name: home
+        file: src/data/home.json
+        fields:
+          - label: "Header (top of the page)"
+            name: hero
+            widget: object
+            fields:
+              - { label: "Name", name: name, widget: string }
+              - { label: "Subtitle", name: subtitle, widget: string }
+              - { label: "Tagline", name: tagline, widget: text }
+          - label: "Search engine info"
+            name: seo
+            widget: object
+            collapsed: true
+            required: false
+            fields:
+              - { label: "Browser tab title", name: title, widget: string, required: false }
+              - { label: "Meta description", name: description, widget: text, required: false }
+          - label: "Intro text"
+            name: intro
+            widget: text
+            required: false
+            hint: "Links allowed: [text](https://example.com) or [text](/publications/). Also **bold**, *italic*, `code`. Leave empty to hide."
+          - label: "Latest News section"
+            name: news
+            widget: object
+            fields:
+              - { label: "Show this section", name: show, widget: boolean, default: true }
+              - { label: "Heading", name: heading, widget: string, default: "Latest News" }
+              - { label: "Number of items", name: count, widget: number, value_type: int, default: 5, min: 1, max: 20 }
+          - label: "Interactive Demos"
+            name: demos
+            widget: list
+            label_singular: "Demo"
+            summary: "{{fields.heading}} — {{fields.id}}"
+            required: false
+            hint: "Drag to reorder. Untick 'Show' to hide a demo without deleting it."
+            fields:
+              - label: "Demo"
+                name: id
+                widget: select
+                options:
+                  - { label: "Digit distribution (pi, e, sqrt2, phi)", value: "digit-distribution" }
+                hint: "New demos have to be added in the code first, then they appear in this list."
+              - { label: "Show", name: show, widget: boolean, default: true }
+              - { label: "Heading", name: heading, widget: string, required: false }
+              - { label: "Description", name: description, widget: text, required: false, hint: "Links allowed, same as the intro text." }
+          - label: "Quick Link Cards"
+            name: quickLinks
+            widget: list
+            label_singular: "Card"
+            summary: "{{fields.title}}"
+            required: false
+            hint: "Displayed three per row, in this order."
+            fields:
+              - { label: "Show", name: show, widget: boolean, default: true }
+              - { label: "Title", name: title, widget: string }
+              - { label: "URL", name: href, widget: string, hint: "Internal page, e.g. /publications/ — or a full https:// address" }
+              - { label: "Description", name: description, widget: string }
+
+      # ── About ──
+      - label: "About Page"
+        name: about
+        file: src/data/about.json
+        fields:
+          - { label: "Full Name", name: name, widget: string }
+          - { label: "Role / Title", name: role, widget: string }
+          - label: "Biography"
+            name: bio
+            widget: markdown
+            buttons: [bold, italic, link, quote, bulleted-list, numbered-list]
+            editor_components: []
+            hint: "Use the link button to add hypertext links."
+          - { label: "Photo", name: photo, widget: image, required: false, hint: "Upload a profile photo" }
+          - label: "Research Interests"
+            name: interests
+            widget: list
+            field: { label: "Interest", name: interest, widget: string }
+          - label: "Education"
+            name: education
+            widget: list
+            fields:
+              - { label: "Degree", name: degree, widget: string }
+              - { label: "Institution", name: institution, widget: string }
+              - { label: "Year", name: year, widget: string, required: false }
+          - label: "Contact"
+            name: contact
+            widget: list
+            fields:
+              - { label: "Label (e.g. Email, Office)", name: label, widget: string }
+              - { label: "Value", name: value, widget: string }
+
+      # ── Publications ──
+      - label: "Publications"
+        name: publications
+        file: src/data/publications.json
+        fields:
+          - label: "Publications"
+            name: publications
+            widget: list
+            label_singular: "Publication"
+            summary: "{{fields.title}} ({{fields.year}})"
+            fields:
+              - { label: "ID (short unique key)", name: id, widget: string, hint: "e.g. trucchi2026normality" }
+              - { label: "Year", name: year, widget: number, value_type: int }
+              - { label: "Title", name: title, widget: string }
+              - { label: "Authors", name: authors, widget: string, hint: "e.g. M. Trucchi, A. Coauthor" }
+              - { label: "Venue", name: venue, widget: string, hint: "Journal name or 'Preprint, YEAR'" }
+              - { label: "Abstract", name: abstract, widget: text, required: false }
+              - { label: "BibTeX", name: bibtex, widget: text, required: false }
+              - { label: "PDF link", name: pdf_url, widget: string, required: false }
+              - { label: "arXiv link", name: arxiv_url, widget: string, required: false }
+              - { label: "DOI link", name: doi_url, widget: string, required: false }
+
+      # ── Teaching ──
+      - label: "Teaching"
+        name: teaching
+        file: src/data/teaching.json
+        fields:
+          - label: "Current Courses"
+            name: current
+            widget: list
+            label_singular: "Course"
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "Course Title", name: title, widget: string }
+              - { label: "Meta (e.g. Spring 2026 · Graduate · University)", name: meta, widget: string }
+              - { label: "Description", name: description, widget: text }
+          - label: "Past Courses"
+            name: past
+            widget: list
+            label_singular: "Course"
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "Course Title", name: title, widget: string }
+              - { label: "Meta", name: meta, widget: string }
+              - { label: "Description", name: description, widget: text }
+          - label: "Lecture Notes"
+            name: notes
+            widget: list
+            label_singular: "Note"
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "Title", name: title, widget: string }
+              - { label: "Description", name: description, widget: string }
+              - { label: "Download URL", name: url, widget: string }
+
+      # ── Projects / Code ──
+      - label: "Software Projects"
+        name: projects
+        file: src/data/projects.json
+        fields:
+          - label: "Projects"
+            name: projects
+            widget: list
+            label_singular: "Project"
+            summary: "{{fields.name}}"
+            fields:
+              - { label: "Project Name", name: name, widget: string }
+              - { label: "URL", name: url, widget: string }
+              - { label: "Description", name: description, widget: text }
+              - { label: "Tags (technologies)", name: tags, widget: list, field: { label: "Tag", name: tag, widget: string } }
+
+      # ── Talks ──
+      - label: "Talks & Presentations"
+        name: talks
+        file: src/data/talks.json
+        fields:
+          - label: "Talks"
+            name: talks
+            widget: list
+            label_singular: "Talk"
+            summary: "{{fields.title}} — {{fields.date}}"
+            fields:
+              - { label: "Title", name: title, widget: string }
+              - { label: "Venue", name: venue, widget: string }
+              - { label: "Date (e.g. June 2026)", name: date, widget: string }
+              - { label: "Slides URL", name: slidesUrl, widget: string, required: false }
+              - { label: "Video URL", name: videoUrl, widget: string, required: false }
+
+      # ── CV ──
+      - label: "CV / Resume"
+        name: cv
+        file: src/data/cv.json
+        fields:
+          - { label: "PDF Download URL", name: pdf_url, widget: string, required: false, hint: "Upload a PDF CV and paste the URL here" }
+          - label: "Positions"
+            name: positions
+            widget: list
+            label_singular: "Position"
+            summary: "{{fields.title}} — {{fields.institution}}"
+            fields:
+              - { label: "Title", name: title, widget: string }
+              - { label: "Institution", name: institution, widget: string }
+              - { label: "Dates", name: dates, widget: string }
+              - { label: "Description", name: description, widget: text, required: false }
+          - label: "Education"
+            name: education
+            widget: list
+            label_singular: "Degree"
+            summary: "{{fields.degree}} — {{fields.institution}}"
+            fields:
+              - { label: "Degree", name: degree, widget: string }
+              - { label: "Institution", name: institution, widget: string }
+              - { label: "Dates", name: dates, widget: string, required: false }
+              - { label: "Thesis Title", name: thesis, widget: string, required: false }
+          - label: "Awards & Grants"
+            name: awards
+            widget: list
+            label_singular: "Award"
+            summary: "{{fields.name}}"
+            fields:
+              - { label: "Name", name: name, widget: string }
+              - { label: "Institution", name: institution, widget: string }
+              - { label: "Year", name: year, widget: string, required: false }
+          - label: "Service"
+            name: service
+            widget: list
+            label_singular: "Service"
+            summary: "{{fields.role}}"
+            fields:
+              - { label: "Role", name: role, widget: string }
+              - { label: "Detail", name: detail, widget: string }
+          - { label: "Skills & Tools", name: skills, widget: list, field: { label: "Skill", name: skill, widget: string } }
+
+      # ── Links ──
+      - label: "Links & Resources"
+        name: links
+        file: src/data/links.json
+        fields:
+          - label: "Link Categories"
+            name: links
+            widget: list
+            label_singular: "Category"
+            summary: "{{fields.category}}"
+            fields:
+              - { label: "Category Name", name: category, widget: string }
+              - label: "Links"
+                name: items
+                widget: list
+                label_singular: "Link"
+                summary: "{{fields.name}}"
+                fields:
+                  - { label: "Name", name: name, widget: string }
+                  - { label: "URL", name: url, widget: string }
+                  - { label: "Description", name: description, widget: string }

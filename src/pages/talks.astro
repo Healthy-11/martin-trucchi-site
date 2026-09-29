@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TalkEntry from '../components/TalkEntry.astro';
+import talkData from '../data/talks.json';
+const talks = talkData.talks;
+---
+
+<BaseLayout
+    title="Talks | Martin Trucchi"
+    description="Conference talks and seminar presentations by Martin Trucchi."
+>
+    <div class="page-header">
+        <div class="container">
+            <h1>Talks</h1>
+            <p>Conference presentations, seminar talks, and colloquia.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        {talks.length === 0 ? (
+            <p style="color: var(--text-tertiary); font-style: italic;">No talks listed yet.</p>
+        ) : (
+            talks.map((talk) => (
+                <TalkEntry
+                    title={talk.title}
+                    venue={talk.venue}
+                    date={talk.date}
+                    slidesUrl={talk.slidesUrl}
+                    videoUrl={talk.videoUrl}
+                />
+            ))
+        )}
+    </div>
+</BaseLayout>

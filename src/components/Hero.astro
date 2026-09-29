@@ -1,0 +1,23 @@
+---
+interface Props {
+    name: string;
+    subtitle: string;
+    tagline: string;
+}
+
+const { name, subtitle, tagline } = Astro.props;
+---
+
+<section class="hero">
+    <div class="hero-dots" data-parallax data-speed="0.5" aria-hidden="true"></div>
+    <div class="container">
+        <h1>{name}</h1>
+        <p class="subtitle">{subtitle}</p>
+        <p class="tagline">{tagline}</p>
+    </div>
+    <div class="scroll-hint" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9" />
+        </svg>
+    </div>
+</section>

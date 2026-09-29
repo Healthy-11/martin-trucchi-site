@@ -1,0 +1,100 @@
+{
+  "pdf_url": "public/uploads/cv2026-trucchi.pdf",
+  "positions": [
+    {
+      "title": "Research intern: Synthetic constructive algebras",
+      "institution": "Department of Computer Science, Università di Verona",
+      "dates": "2026",
+      "description": "Five months internship, supervised by Peter Schuster."
+    },
+    {
+      "title": "Research intern: Synthetic and constructive algorithmic randomness",
+      "institution": "Inria Paris, Université Paris Cité",
+      "dates": "2025 - 2026",
+      "description": "Three months internship, supervised by Yannick Forster and Dominik Kirst."
+    },
+    {
+      "title": "Research intern: Formalization of game semantics in Rocq",
+      "institution": "LIS, Aix-Marseille Université",
+      "dates": "2025",
+      "description": "Four months internship, supervised by Étienne Miquey and Pierre Clairambault."
+    },
+    {
+      "title": "Research intern: Synthetic topology in Agda, a definitional quest",
+      "institution": "School of Computer Science, University of Birmingham",
+      "dates": "2024",
+      "description": "Three months internship, supervised by Vincent Rahli."
+    },
+    {
+      "title": "Research intern: Algorithmic randomness",
+      "institution": "I2M, Aix-Marseille Université",
+      "dates": "2023",
+      "description": "Six weeks internship, supervised by Pierre Guillon."
+    }
+  ],
+  "education": [
+    {
+      "degree": "Diploma of the ENS de Lyon (ongoing)",
+      "institution": "École Normale Supérieure de Lyon",
+      "dates": "2022 - 2026",
+      "thesis": ""
+    },
+    {
+      "degree": "M2 LMFI, Mathematical Logic and Foundations of Computer Science",
+      "institution": "Université Paris Cité",
+      "dates": "2024 - 2025",
+      "thesis": ""
+    },
+    {
+      "degree": "M1 Computer Science, concepts and applications",
+      "institution": "École Normale Supérieure de Lyon",
+      "dates": "2023 - 2024",
+      "thesis": ""
+    },
+    {
+      "degree": "Bachelor's degree in Computer Science",
+      "institution": "École Normale Supérieure de Lyon - UCBL",
+      "dates": "2022 - 2023",
+      "thesis": ""
+    },
+    {
+      "degree": "CPGE MPSI / MP*",
+      "institution": "Lycée Thiers, Marseille",
+      "dates": "2020 - 2022",
+      "thesis": ""
+    },
+    {
+      "degree": "A-level science",
+      "institution": "Lycée Chevreul Blancarde, Marseille",
+      "dates": "2020",
+      "thesis": ""
+    }
+  ],
+  "schools": [
+    {
+      "name": "EPIT25, École de Printemps d'Informatique Théorique",
+      "location": "Aussois, France",
+      "year": "2025",
+      "topic": "(Co)inductive and circular reasoning applied to programming, formal proofs, and software verification."
+    },
+    {
+      "name": "PC25, Proofs and Computation",
+      "location": "Herrsching, Germany",
+      "year": "2025",
+      "topic": "Predicative foundations, constructive mathematics and type theory, computation in higher types, extraction of programs from proofs."
+    }
+  ],
+  "awards": [],
+  "service": [],
+  "skills": [
+    "LaTeX",
+    "Python",
+    "OCaml",
+    "Rocq",
+    "Agda"
+  ],
+  "languages": [
+    "French (native)",
+    "English"
+  ]
+}

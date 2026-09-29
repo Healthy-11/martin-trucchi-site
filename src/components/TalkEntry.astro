@@ -1,0 +1,20 @@
+---
+interface Props {
+    title: string;
+    venue: string;
+    date: string;
+    slidesUrl?: string;
+    videoUrl?: string;
+}
+
+const { title, venue, date, slidesUrl, videoUrl } = Astro.props;
+---
+
+<div class="talk-entry reveal-right">
+    <h3>{title}</h3>
+    <p class="talk-meta">{venue} &middot; {date}</p>
+    <div class="talk-links">
+        {slidesUrl && <a href={slidesUrl} target="_blank" rel="noopener noreferrer">Slides</a>}
+        {videoUrl && <a href={videoUrl} target="_blank" rel="noopener noreferrer">Video</a>}
+    </div>
+</div>

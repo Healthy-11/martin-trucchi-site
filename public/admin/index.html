@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Admin — Martin Trucchi</title>
+    <style>
+        .build-notice {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            background: #1e293b;
+            color: #f1f5f9;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 13px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-top: 1px solid #334155;
+        }
+        .build-notice svg {
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+            color: #facc15;
+        }
+        .build-notice .dismiss {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0 4px;
+            margin-left: 12px;
+        }
+        .build-notice .dismiss:hover { color: #94a3b8; }
+    </style>
+</head>
+<body>
+    <div class="build-notice" id="build-notice">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span>Each <strong>Publish</strong> triggers a site rebuild (~2 min). Save drafts freely, but publish only when ready.</span>
+        <button class="dismiss" onclick="document.getElementById('build-notice').remove()" aria-label="Dismiss">&times;</button>
+    </div>
+    <script src="https://unpkg.com/decap-cms@^3.7.0/dist/decap-cms.js"></script>
+</body>
+</html>

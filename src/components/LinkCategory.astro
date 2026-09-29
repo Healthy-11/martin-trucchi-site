@@ -1,0 +1,26 @@
+---
+interface LinkItem {
+    name: string;
+    url: string;
+    description: string;
+}
+
+interface Props {
+    category: string;
+    items: LinkItem[];
+}
+
+const { category, items } = Astro.props;
+---
+
+<div class="link-category reveal-up">
+    <h3>{category}</h3>
+    <ul class="link-list">
+        {items.map(({ name, url, description }) => (
+            <li>
+                <a href={url} target="_blank" rel="noopener noreferrer">{name}</a>
+                <span class="link-desc">{description}</span>
+            </li>
+        ))}
+    </ul>
+</div>

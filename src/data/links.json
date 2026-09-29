@@ -1,0 +1,34 @@
+{
+  "links": [
+    {
+      "category": "Research Tools",
+      "items": [
+        {
+          "name": "arXiv",
+          "url": "https://arxiv.org/",
+          "description": "Open-access preprint repository"
+        },
+        {
+          "name": "HAL",
+          "url": "https://hal.science/",
+          "description": "French open archive of scholarly documents"
+        },
+        {
+          "name": "DBLP",
+          "url": "https://dblp.org/",
+          "description": "Computer science bibliography"
+        }
+      ]
+    },
+    {
+      "category": "Proof Assistants & Tools",
+      "items": [
+        {
+          "name": "Rocq Prover",
+          "url": "https://rocq-prover.org/",
+          "description": "Interactive theorem prover (formerly Coq)"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+---
+/**
+ * Renders one interactive demo by id.
+ *
+ * ── TO ADD A NEW DEMO ──────────────────────────────────────────────
+ * 1. Create the component in src/components/ (e.g. PiSimulator.astro).
+ * 2. Import it below and add one line to `registry`.
+ * 3. Add the same id to the "Demo" select options in public/admin/config.yml
+ *    (collections > data > Home Page > demos > id).
+ * Martin can then add it, reorder it and toggle it from /admin.
+ * ───────────────────────────────────────────────────────────────────
+ */
+import DigitDistribution from './DigitDistribution.astro';
+
+const registry: Record<string, any> = {
+    'digit-distribution': DigitDistribution,
+};
+
+interface Props {
+    id: string;
+}
+
+const { id } = Astro.props;
+const Demo = registry[id];
+---
+
+{Demo ? <Demo /> : (
+    import.meta.env.DEV && (
+        <p class="demo-missing">Unknown demo id: <code>{id}</code></p>
+    )
+)}
+
+<style>
+    .demo-missing {
+        padding: 1rem;
+        border: 1px dashed var(--border);
+        border-radius: 8px;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+</style>

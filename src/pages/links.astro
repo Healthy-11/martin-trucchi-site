@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LinkCategory from '../components/LinkCategory.astro';
+import linkData from '../data/links.json';
+const links = linkData.links;
+---
+
+<BaseLayout
+    title="Links | Martin Trucchi"
+    description="Useful links and resources curated by Martin Trucchi."
+>
+    <div class="page-header">
+        <div class="container">
+            <h1>Links</h1>
+            <p>Resources, references, and useful websites.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        {links.map((group) => (
+            <LinkCategory
+                category={group.category}
+                items={group.items}
+            />
+        ))}
+    </div>
+</BaseLayout>

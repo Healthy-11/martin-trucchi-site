@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import projectData from '../data/projects.json';
+const projects = projectData.projects;
+---
+
+<BaseLayout
+    title="Code | Martin Trucchi"
+    description="Software projects and tools by Martin Trucchi."
+>
+    <div class="page-header">
+        <div class="container">
+            <h1>Code</h1>
+            <p>Software projects and computational tools.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        {projects.length === 0 ? (
+            <p style="color: var(--text-tertiary); font-style: italic;">No projects listed yet.</p>
+        ) : (
+            <div class="project-grid reveal-scale" data-stagger="0.12">
+                {projects.map((project) => (
+                    <ProjectCard
+                        name={project.name}
+                        url={project.url}
+                        description={project.description}
+                        tags={project.tags}
+                    />
+                ))}
+            </div>
+        )}
+    </div>
+</BaseLayout>

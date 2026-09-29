@@ -1,0 +1,44 @@
+{
+  "name": "Martin Trucchi",
+  "role": "Computer science PhD student",
+  "bio": "I'm a 1st year PhD computer science student at l'École Polytechnique, in the [Partout team](https://team.inria.fr/partout/). I work under the supervision of [Lutz Straßburger](https://www.lix.polytechnique.fr/Labo/Lutz.Strassburger/), [Yannick Forster](https://yforster.de/) and [Dominik Kirst](https://www.ps.uni-saarland.de/~kirst/).",
+  "photo": "",
+  "interests": [],
+  "education": [
+    {
+      "degree": "Diploma of the ENS de Lyon (ongoing)",
+      "institution": "École Normale Supérieure de Lyon",
+      "year": "2022 - 2026"
+    },
+    {
+      "degree": "M2 LMFI, Mathematical Logic and Foundations of Computer Science",
+      "institution": "Université Paris Cité",
+      "year": "2024 - 2025"
+    },
+    {
+      "degree": "M1 Computer Science, concepts and applications",
+      "institution": "École Normale Supérieure de Lyon",
+      "year": "2023 - 2024"
+    },
+    {
+      "degree": "Bachelor's degree, Computer Science",
+      "institution": "École Normale Supérieure de Lyon - UCBL",
+      "year": "2022 - 2023"
+    },
+    {
+      "degree": "CPGE MPSI / MP*",
+      "institution": "Lycée Thiers, Marseille",
+      "year": "2020 - 2022"
+    }
+  ],
+  "contact": [
+    {
+      "label": "Email",
+      "value": "martin.trucchi@inria.fr"
+    },
+    {
+      "label": "Affiliation",
+      "value": "École Polytechnique (LIX), INRIA Saclay (Équipe PARTOUT)"
+    }
+  ]
+}

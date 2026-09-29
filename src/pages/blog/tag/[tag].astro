@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+    const posts = await getCollection('blog');
+    const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+    return tags.map((tag) => ({
+        params: { tag },
+        props: {
+            tag,
+            posts: posts
+                .filter((p) => !p.data.draft && p.data.tags.includes(tag))
+                .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
+        },
+    }));
+}
+
+const { tag, posts } = Astro.props;
+
+function estimateReadingTime(body: string): string {
+    const words = body.split(/\s+/).length;
+    return `${Math.ceil(words / 200)} min read`;
+}
+---
+
+<BaseLayout
+    title={`Posts tagged "${tag}" | Martin Trucchi`}
+    description={`Blog posts tagged with "${tag}".`}
+>
+    <div class="page-header">
+        <div class="container">
+            <h1>Tag: {tag}</h1>
+            <p>{posts.length} post{posts.length !== 1 ? 's' : ''} &middot; <a href="/blog/">View all posts</a></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <ul class="blog-list">
+            {posts.map((post) => (
+                <li class="blog-item reveal-up">
+                    <h3><a href={`/blog/${post.slug}/`}>{post.data.title}</a></h3>
+                    <div class="blog-meta">
+                        <time datetime={post.data.date.toISOString()}>
+                            {post.data.date.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                            })}
+                        </time>
+                        <span>{estimateReadingTime(post.body ?? '')}</span>
+                    </div>
+                    <p class="blog-excerpt">{post.data.description}</p>
+                </li>
+            ))}
+        </ul>
+    </div>
+</BaseLayout>

@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+    .filter((post) => !post.data.draft)
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+function estimateReadingTime(body: string): string {
+    const words = body.split(/\s+/).length;
+    const minutes = Math.ceil(words / 200);
+    return `${minutes} min read`;
+}
+---
+
+<BaseLayout
+    title="Blog | Martin Trucchi"
+    description="Research notes, expository writing, and mathematical musings by Martin Trucchi."
+>
+    <div class="page-header">
+        <div class="container">
+            <h1>Blog</h1>
+            <p>Research notes, expository writing, and mathematical musings.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        {posts.length === 0 ? (
+            <p style="color: var(--text-tertiary); font-style: italic;">No posts yet.</p>
+        ) : (
+            <ul class="blog-list">
+                {posts.map((post) => (
+                    <li class="blog-item reveal-up">
+                        <h3><a href={`/blog/${post.slug}/`}>{post.data.title}</a></h3>
+                        <div class="blog-meta">
+                            <time datetime={post.data.date.toISOString()}>
+                                {post.data.date.toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                })}
+                            </time>
+                            <span>{estimateReadingTime(post.body ?? '')}</span>
+                        </div>
+                        {post.data.tags.length > 0 && (
+                            <div style="margin-bottom: 0.5rem; display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                                {post.data.tags.map((tag) => (
+                                    <span class="blog-tag">{tag}</span>
+                                ))}
+                            </div>
+                        )}
+                        <p class="blog-excerpt">{post.data.description}</p>
+                    </li>
+                ))}
+            </ul>
+        )}
+    </div>
+</BaseLayout>

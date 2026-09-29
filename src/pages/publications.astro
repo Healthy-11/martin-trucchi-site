@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PublicationEntry from '../components/PublicationEntry.astro';
+import pubData from '../data/publications.json';
+
+// Group flat array by year, sorted descending
+const publications = pubData.publications;
+const grouped = publications.reduce((acc, pub) => {
+    if (!acc[pub.year]) acc[pub.year] = [];
+    acc[pub.year].push(pub);
+    return acc;
+}, {} as Record<number, typeof publications>);
+
+const years = Object.keys(grouped).map(Number).sort((a, b) => b - a);
+---
+
+<BaseLayout
+    title="Publications | Martin Trucchi"
+    description="Research publications and preprints by Martin Trucchi."
+>
+    <div class="page-header">
+        <div class="container">
+            <h1>Publications</h1>
+            <p>Research papers and preprints, listed by year.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        {publications.length === 0 && (
+            <p style="color: var(--text-tertiary); font-style: italic;">No publications listed yet.</p>
+        )}
+
+        {publications.length > 2 && (
+            <div class="pub-stats reveal-up">
+                <div class="pub-stat">
+                    <span class="pub-stat-number">{publications.length}</span>
+                    <span class="pub-stat-label">Publication{publications.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div class="pub-stat">
+                    <span class="pub-stat-number">{years.length}</span>
+                    <span class="pub-stat-label">Active Year{years.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div class="pub-stat">
+                    <span class="pub-stat-number">{new Set(publications.flatMap(p => p.authors.split(',').map(a => a.trim()))).size}</span>
+                    <span class="pub-stat-label">Coauthor{new Set(publications.flatMap(p => p.authors.split(',').map(a => a.trim()))).size !== 1 ? 's' : ''}</span>
+                </div>
+            </div>
+        )}
+
+        {years.map((year) => (
+            <div class="pub-year-group">
+                <h2 class="reveal-up">{year}</h2>
+                {grouped[year].map((pub) => {
+                    const links = [
+                        pub.pdf_url ? { label: 'PDF', url: pub.pdf_url } : null,
+                        pub.arxiv_url ? { label: 'arXiv', url: pub.arxiv_url } : null,
+                        pub.doi_url ? { label: 'DOI', url: pub.doi_url } : null,
+                    ].filter(Boolean) as { label: string; url: string }[];
+
+                    return (
+                        <PublicationEntry
+                            id={pub.id}
+                            title={pub.title}
+                            authors={pub.authors}
+                            venue={pub.venue}
+                            abstract={pub.abstract}
+                            bibtex={pub.bibtex}
+                            links={links}
+                        />
+                    );
+                })}
+            </div>
+        ))}
+    </div>
+</BaseLayout>
