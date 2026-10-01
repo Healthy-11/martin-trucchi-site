@@ -72,6 +72,12 @@
   ],
   "schools": [
     {
+      "name": "PS26, Proof Society",
+      "location": "Aussois, France",
+      "year": "2026",
+      "topic": "8th International School and Workshop on Proof Theory"
+    },
+    {
       "name": "EPIT25, École de Printemps d'Informatique Théorique",
       "location": "Aussois, France",
       "year": "2025",
