@@ -3,7 +3,13 @@
   "role": "Computer science PhD student",
   "bio": "I'm a 1st year PhD computer science student at l'École Polytechnique, in the [Partout team](https://team.inria.fr/partout/). I work under the supervision of [Lutz Straßburger](https://www.lix.polytechnique.fr/Labo/Lutz.Strassburger/), [Yannick Forster](https://yforster.de/) and [Dominik Kirst](https://www.ps.uni-saarland.de/~kirst/).",
   "photo": "/uploads/photo_profil_carre_resized.jpg",
-  "interests": [],
+  "interests": [
+    "Computability theory",
+    "Synthetic mathematics",
+    "Constructive mathematics",
+    "Formalisation",
+    "Algorithmic randomness"
+  ],
   "education": [
     {
       "degree": "Diploma of the ENS de Lyon (ongoing)",
@@ -34,7 +40,7 @@
   "contact": [
     {
       "label": "Email",
-      "value": "martin.trucchi@inria.fr"
+      "value": "martin [dot] trucchi [at] inria [dot] fr"
     },
     {
       "label": "Affiliation",
